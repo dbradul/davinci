@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-
+from davinci.settings import settings
 from homeworks import apis as homeworks_apis
 from solutions import apis as solutions_apis
 
@@ -8,7 +8,7 @@ from solutions import apis as solutions_apis
 tags_metadata = [
     {
         'name': 'homeworks',
-        'description': 'Retrieving homeworks and submitting solutions',
+        'description': 'Retrieving homeworks',
     },
     {
         'name': 'solutions',
@@ -28,4 +28,8 @@ app.include_router(homeworks_apis.router)
 app.include_router(solutions_apis.router)
 
 
-uvicorn.run(app)
+uvicorn.run(
+        app,
+        host=settings.server_host,
+        port=settings.server_port,
+)
