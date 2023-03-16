@@ -1,10 +1,7 @@
 import json
-from typing import (
-    List,
-    Optional,
-)
 
 import epicbox
+import openai
 from fastapi import (
     Depends,
     HTTPException,
@@ -13,13 +10,10 @@ from fastapi import (
 from sqlalchemy.orm import Session
 
 import homeworks
-from solutions import models, schemas
-from davinci.settings import settings
-# from solutions import models, schemas
 from davinci.database import get_session
+from davinci.settings import settings
+from solutions import models, schemas
 from solutions.schemas import SolutionError
-
-import openai
 
 openai.api_key = settings.openai_api_key
 
@@ -108,6 +102,9 @@ class AISolutionService:
             .first()
         )
 
+        if not homework:
+            raise HTTPException(status.HTTP_404_NOT_FOUND)
+
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo-0301",
             messages=[
@@ -141,8 +138,10 @@ class AISolutionService:
             .first()
         )
 
+        if not homework:
+            raise HTTPException(status.HTTP_404_NOT_FOUND)
+
         response = openai.ChatCompletion.create(
-            # model="text-davinci-003",
             model="gpt-3.5-turbo-0301",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},

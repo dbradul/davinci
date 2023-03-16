@@ -12,5 +12,4 @@ class Solution(Base):
     id = Column(Integer, primary_key=True)
     homework_id = Column(Integer, ForeignKey('homework.id'), index=True)
     input = Column(String, nullable=False)
-    output = Column(String, nullable=False)
     expected = Column(String, nullable=False)

@@ -11,5 +11,4 @@ class Homework(Base):
 
     id = Column(Integer, primary_key=True)
     number = Column(Integer, nullable=False, unique=True)
-    text = Column(String, nullable=False)
     description = Column(String, nullable=False)
