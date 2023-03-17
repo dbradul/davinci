@@ -20,24 +20,6 @@ class SolutionError(BaseModel):
 class Solution(BaseModel):
     content: str
 
-    # class Config:
-    #     schema_extra = {
-    #         "examples":{
-    #             "normal": {
-    #                 "content": "a, b, c = [float(x) for x in input().split()]\nresult = a + b * ( c / 2 )\nprint(result)",
-    #             },
-    #             "converted": {
-    #                 "content": "a, b, c = [float(x) for x in input().split()]\nresult = a + b * ( c / 2 )\nprint(result)",
-    #             },
-    #             "invalid": {
-    #                 "content": "a, b, c = [float(x) for x in input().split()]\nresult = a + b * ( c / 2 )\nprint(result)",
-    #             },
-    #         },
-    #         # "example": {
-    #         #     "content": "a, b, c = [float(x) for x in input().split()]\nresult = a + b * ( c / 2 )\nprint(result)",
-    #         # }
-    #     }
-
 
 class SolutionVerdict(BaseModel):
     verdict: VerdictKind

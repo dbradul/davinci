@@ -1,8 +1,6 @@
-from typing import List
-
 from fastapi import APIRouter, Depends, Body
 
-from solutions import models, schemas
+from solutions import schemas
 from solutions.schemas import Solution
 from solutions.services import SolutionService, AISolutionService
 
@@ -30,6 +28,13 @@ SOLUTION_EXAMPLE = Body(
                 "content": "s = input() \nresult = ''.join(x.capitalize() for x in s.split('_')) \nprint(result)",
             }
         },
+        "function": {
+            "summary": "Function example",
+            "description": "A solution that requires an implementation to be inside 'solution' function only.",
+            "value": {
+              "content": "def solution(lst): \n    return max(lst) - min(lst)"
+            }
+        },
     },
 )
 
@@ -46,7 +51,6 @@ router = APIRouter(
 )
 def submit_solution_to_automated_checker(
     homework_number: int,
-    # solution: Solution,
     solution: Solution = SOLUTION_EXAMPLE,
     solution_service: SolutionService = Depends(),
 ):
