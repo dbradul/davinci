@@ -47,7 +47,31 @@ class SolutionService:
                 ]
             )
 
-            files = [{'name': 'main.py', 'content': solution_text.encode()}]
+            extended_solution_text = solution_text
+
+            if solution.is_function:
+                input_solution_text = 'inputs = input().split(" ")'
+                function_param_types = solution.function_param_types.split(' ')
+                input_casts_solution_text = " \n".join([
+                    f'param_{idx} = {t}(inputs[{idx}])'
+                    for idx, t in enumerate(function_param_types)
+                ])
+                input_params_solution_text = ', '.join([
+                    f'param_{idx}'
+                    for idx in range(len(function_param_types))
+                ])
+                call_solution_text = f'result = solution({input_params_solution_text})'
+                print_solution_text = 'print(result)'
+
+                extended_solution_text = ' \n'.join([
+                    input_solution_text,
+                    input_casts_solution_text,
+                    solution_text,
+                    call_solution_text,
+                    print_solution_text
+                ])
+
+            files = [{'name': 'main.py', 'content': extended_solution_text.encode()}]
             limits = {'cputime': 1, 'memory': 64}
             solution_result = epicbox.run(
                 profile_name='python',
