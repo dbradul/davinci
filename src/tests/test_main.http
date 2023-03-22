@@ -1,11 +1,43 @@
 # Test your FastAPI endpoints
 
-GET http://127.0.0.1:8000/
+### Homeworks
+GET http://127.0.0.1:8000/homeworks
 Accept: application/json
 
-###
 
-GET http://127.0.0.1:8000/hello/User
+### Homework by id
+GET http://127.0.0.1:8000/homeworks/1
 Accept: application/json
 
-###
+
+### Simple solution
+POST http://127.0.0.1:8000/solutions/1/auto
+Accept: application/json
+Content-Type: application/json
+
+{ "content": "print('Hello world!')" }
+
+
+### Solution with float inputs
+POST http://127.0.0.1:8000/solutions/2/auto
+Accept: application/json
+Content-Type: application/json
+
+{ "content": "\na, b, c = [float(x) for x in input().split()]\nresult = a + b * ( c / 2 )\nprint(result)\n" }
+
+
+### Solution with string inputs
+POST http://127.0.0.1:8000/solutions/5/auto
+Accept: application/json
+Content-Type: application/json
+
+{ "content": "\ns = input()\nresult = ''.join(x.capitalize() for x in s.split('_'))\nprint(result)\n" }
+
+
+### Function solution
+POST http://127.0.0.1:8000/solutions/15/auto
+Accept: application/json
+Content-Type: application/json
+
+{ "content": "\ndef solution(lst):\n    return max(lst) - min(lst)\n" }
+
