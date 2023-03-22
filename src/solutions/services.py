@@ -1,4 +1,5 @@
 import json
+from textwrap import dedent
 
 import epicbox
 import openai
@@ -13,7 +14,7 @@ import homeworks
 from davinci.database import get_session
 from davinci.settings import settings
 from solutions import models, schemas
-from solutions.schemas import SolutionError
+from solutions.schemas import SolutionError, SolutionResponse
 
 openai.api_key = settings.openai_api_key
 
@@ -26,7 +27,7 @@ class SolutionService:
         self,
         homework_number: int,
         solution_text: str,
-    ) -> schemas.SolutionVerdict:
+    ) -> schemas.SolutionResponse:
         solutions = (
             self.session
             .query(models.Solution)
@@ -50,25 +51,19 @@ class SolutionService:
             extended_solution_text = solution_text
 
             if solution.is_function:
-                input_solution_text = 'inputs = input().split(" ")'
-                function_param_types = solution.function_param_types.split(' ')
-                input_casts_solution_text = " \n".join([
-                    f'param_{idx} = {t}(inputs[{idx}])'
-                    for idx, t in enumerate(function_param_types)
-                ])
-                input_params_solution_text = ', '.join([
-                    f'param_{idx}'
-                    for idx in range(len(function_param_types))
-                ])
-                call_solution_text = f'result = solution({input_params_solution_text})'
-                print_solution_text = 'print(result)'
-
-                extended_solution_text = ' \n'.join([
-                    input_solution_text,
-                    input_casts_solution_text,
+                pre_solution_text = dedent("""
+                    import json
+                    input_text = input()
+                    params = json.loads(input_text)
+                """)
+                post_solution_text = dedent("""
+                    result = solution(*params.values())
+                    print(result)
+                """)
+                extended_solution_text = ''.join([
+                    pre_solution_text,
                     solution_text,
-                    call_solution_text,
-                    print_solution_text
+                    post_solution_text
                 ])
 
             files = [{'name': 'main.py', 'content': extended_solution_text.encode()}]
@@ -95,15 +90,12 @@ class SolutionService:
                     actual=actual_output,
                 )
 
-                result = schemas.SolutionVerdict(
-                    verdict=schemas.VerdictKind.FAILED,
+                result = schemas.SolutionResponseFail(
                     error=error
                 )
                 break
         else:
-            result = schemas.SolutionVerdict(
-                verdict=schemas.VerdictKind.PASSED,
-            )
+            result = schemas.SolutionResponseSuccess()
 
         return result
 

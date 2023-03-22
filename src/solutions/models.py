@@ -15,4 +15,3 @@ class Solution(Base):
     input = Column(String, nullable=False)
     expected = Column(String, nullable=False)
     is_function = Column(Boolean, nullable=True, default=False)
-    function_param_types = Column(String, nullable=True)

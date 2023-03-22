@@ -35,17 +35,17 @@ class HomeworksService:
 
     def get(
         self,
-        homework_number: int
+        pk: int
     ) -> models.Homework:
-        operation = self._get(homework_number)
+        operation = self._get(pk)
         return operation
 
-    def _get(self, homework_number: int) -> Optional[models.Homework]:
+    def _get(self, pk: int) -> Optional[models.Homework]:
         homework = (
             self.session
             .query(models.Homework)
             .filter(
-                models.Homework.number == homework_number
+                models.Homework.id == pk
             )
             .first()
         )

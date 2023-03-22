@@ -23,14 +23,14 @@ def get_homeworks(
 
 
 @router.get(
-    '/{homework_number}',
+    '/{id}',
     response_model=schemas.Homework,
 )
 def get_homework(
-    homework_number: int,
+    id: int,
     homeworks_service: HomeworksService = Depends(),
 ):
     return homeworks_service.get(
-        homework_number,
+        pk=id,
     )
 
