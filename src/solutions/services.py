@@ -14,7 +14,7 @@ import homeworks
 from davinci.database import get_session
 from davinci.settings import settings
 from solutions import models, schemas
-from solutions.schemas import SolutionError, SolutionResponse
+from solutions.schemas import SolutionError
 
 openai.api_key = settings.openai_api_key
 

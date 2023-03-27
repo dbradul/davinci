@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 
-
 from homeworks import apis as homeworks_apis
 from solutions import apis as solutions_apis
 

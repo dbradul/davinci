@@ -18,12 +18,25 @@ Content-Type: application/json
 { "content": "print('Hello world!')" }
 
 
-### Solution with float inputs
-POST http://127.0.0.1:8000/solutions/2/auto
+### Simple solution no inputs
+POST http://127.0.0.1:8000/solutions/13/auto
 Accept: application/json
 Content-Type: application/json
 
-{ "content": "\na, b, c = [float(x) for x in input().split()]\nresult = a + b * ( c / 2 )\nprint(result)\n" }
+{ "content": "a = 5 \nb = 10 \n# your code here \nresult = a * b \nprint(result)" }
+
+
+### Simple solution float inputs
+POST http://127.0.0.1:8000/solutions/15/auto
+Accept: application/json
+Content-Type: application/json
+
+{ "content": "a, b, c = map(float, input('Enter numbers a and b').split()) \n# your code here \nresult = a + b * ( c / 2 ) \nprint(f'Результат обчислення = {result}')" }
+
+
+
+
+
 
 
 ### Solution with string inputs

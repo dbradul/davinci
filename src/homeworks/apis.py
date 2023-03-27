@@ -11,7 +11,6 @@ router = APIRouter(
 )
 
 
-
 @router.get(
     '/',
     response_model=List[schemas.Homework],
@@ -33,4 +32,3 @@ def get_homework(
     return homeworks_service.get(
         pk=id,
     )
-
