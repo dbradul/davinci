@@ -18,29 +18,24 @@ Content-Type: application/json
 { "content": "print('Hello world!')" }
 
 
-### Simple solution no inputs
+### Solution with no inputs
 POST http://127.0.0.1:8000/solutions/13/auto
 Accept: application/json
 Content-Type: application/json
 
-{ "content": "a = 5 \nb = 10 \n# your code here \nresult = a * b \nprint(result)" }
+{ "content": "\na, b = 5, 10\nresult = a * b\nprint(result)" }
 
 
-### Simple solution float inputs
+### Solution with float inputs
 POST http://127.0.0.1:8000/solutions/15/auto
 Accept: application/json
 Content-Type: application/json
 
-{ "content": "a, b, c = map(float, input('Enter numbers a and b').split()) \n# your code here \nresult = a + b * ( c / 2 ) \nprint(f'Результат обчислення = {result}')" }
-
-
-
-
-
+{ "content": "\na, b, c = map(float, input().split())\nresult = a + b * ( c / 2 )\nprint('Результат обчислення =', result)\n" }
 
 
 ### Solution with string inputs
-POST http://127.0.0.1:8000/solutions/5/auto
+POST http://127.0.0.1:8000/solutions/32/auto
 Accept: application/json
 Content-Type: application/json
 
@@ -48,7 +43,7 @@ Content-Type: application/json
 
 
 ### Function solution
-POST http://127.0.0.1:8000/solutions/15/auto
+POST http://127.0.0.1:8000/solutions/115/auto
 Accept: application/json
 Content-Type: application/json
 

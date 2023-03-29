@@ -20,9 +20,7 @@ def test_solution_no_inputs(client):
         url='/solutions/13/auto',
         json={
             "content": dedent('''
-            a = 5
-            b = 10
-            # your code here
+            a, b = 5, 10
             result = a * b
             print(result)
             ''')
@@ -35,22 +33,17 @@ def test_solution_input_floats(client):
         url='/solutions/15/auto',
         json={
             "content": dedent('''
-            a, b, c = map(float, input("Enter numbers a and b").split())
-            # your code here
+            a, b, c = map(float, input().split())
             result = a + b * ( c / 2 )
-            print(f"Результат обчислення = {result}")
+            print('Результат обчислення =', result)
             ''')
         })
     assert response.json()['success'], response.json()
 
 
-
-
-
-
 def test_solution_input_strings(client):
     response = client.post(
-        url='/solutions/5/auto',
+        url='/solutions/32/auto',
         json={
             "content": dedent('''
             s = input()
@@ -63,7 +56,7 @@ def test_solution_input_strings(client):
 
 def test_solution_input_function(client):
     response = client.post(
-        url='/solutions/15/auto',
+        url='/solutions/115/auto',
         json={
             "content": dedent('''
             def solution(lst):
