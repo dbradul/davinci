@@ -21,7 +21,7 @@ SOLUTION_EXAMPLE = Body(
             "summary": "Floats example",
             "description": "A solution that requires floats as input.",
             "value": {
-                # "content": "a, b, c = [float(x) for x in input().split()] \nresult = a + b * ( c / 2 ) \nprint(result)",
+                # "content": "a, b, c = map(float, input().split()) \nresult = a + b * ( c / 2 ) \nprint(result)",
                 "content": dedent("""
                         a, b, c = [float(x) for x in input().split()]
                         result = a + b * ( c / 2 )
