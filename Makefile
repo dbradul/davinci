@@ -24,10 +24,10 @@ copy_from: ## Copy db from aws
 	scp -i ~/.ssh/main_sunday.pem ubuntu@myaws_sunday2:/home/ubuntu/davinci/data/database.sqlite3 ./data/database.sqlite3
 
 tests: ## Run tests
-	pytest -s -v ./src/tests --setup-show
+	pipenv run pytest -s -v ./src/tests --setup-show
 
 testn: ## Run test by its n=<name>
-	pytest -s -v ./src/tests/test_solutions.py::{n} --setup-show
+	pipenv run pytest -s -v ./src/tests/test_solutions.py::{n} --setup-show
 
 export: ## Export env variables
 	export $(cat .env | sed 's/#.*//g' | xargs)

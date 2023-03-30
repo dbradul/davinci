@@ -1,9 +1,6 @@
-from textwrap import dedent
-from typing import Union
-
 from fastapi import APIRouter, Depends, Body
+from textwrap import dedent
 
-from solutions import schemas
 from solutions.schemas import Solution, SolutionResponse
 from solutions.services import SolutionService, AISolutionService
 
@@ -22,7 +19,7 @@ SOLUTION_EXAMPLE = Body(
             "description": "A solution that requires floats as input.",
             "value": {
                 "content": dedent("""
-                    a, b, c = [float(x) for x in input().split()]
+                    a, b, c = map(float, input().split())
                     result = a + b * ( c / 2 )
                     print(result)
                 """),
@@ -83,7 +80,7 @@ def submit_solution_to_ai(
     solution: Solution = SOLUTION_EXAMPLE,
     solution_service: AISolutionService = Depends(),
 ):
-    return solution_service.submit_solution(
+    return solution_service.check(
         homework_number,
         solution.content
     )

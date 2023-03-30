@@ -11,7 +11,6 @@ from fastapi import (
 from sqlalchemy.orm import Session
 
 import homeworks
-import test_samples
 from davinci.database import get_session
 from davinci.settings import settings
 from solutions import models, schemas
@@ -24,40 +23,14 @@ class SolutionService:
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def extend_solution_test(self, solution_text: str) -> str:
-        pre_solution_text = dedent("""
-            import json
-            input_text = input()
-            params = json.loads(input_text)
-        """)
-        post_solution_text = dedent("""
-            result = solution(*params.values())
-            print(result)
-        """)
-        solution_text = ''.join([
-            pre_solution_text,
-            solution_text,
-            post_solution_text
-        ])
-
-        return solution_text
-
     def check(
         self,
         homework_number: int,
         solution_text: str,
     ) -> schemas.SolutionResponse:
-        homework = (
+        solutions = (
             self.session
-            .query(models.Homework)
-            .filter(
-                homeworks.models.Homework.number == homework_number
-            )
-            .first()
-        )
-        test_samples_set = (
-            self.session
-            .query(test_samples.models.TestSample)
+            .query(models.Solution)
             .join(homeworks.models.Homework)
             .filter(
                 homeworks.models.Homework.number == homework_number
@@ -65,31 +38,46 @@ class SolutionService:
             .all()
         )
 
-        if not test_samples_set:
+        if not solutions:
             raise HTTPException(status.HTTP_404_NOT_FOUND)
 
-        if homework.is_function:
-            solution_text = self.extend_solution_test(solution_text)
-
-        for test_sample in test_samples_set:
+        for solution in solutions:
             epicbox.configure(
                 profiles=[
                     epicbox.Profile('python', 'python:3.6.5-alpine')
                 ]
             )
 
-            files = [{'name': 'main.py', 'content': solution_text.encode()}]
+            extended_solution_text = solution_text
+
+            if solution.is_function:
+                pre_solution_text = dedent("""
+                    import json
+                    input_text = input()
+                    params = json.loads(input_text)
+                """)
+                post_solution_text = dedent("""
+                    result = solution(*params.values())
+                    print(result)
+                """)
+                extended_solution_text = ''.join([
+                    pre_solution_text,
+                    solution_text,
+                    post_solution_text
+                ])
+
+            files = [{'name': 'main.py', 'content': extended_solution_text.encode()}]
             limits = {'cputime': 1, 'memory': 64}
             solution_result = epicbox.run(
                 profile_name='python',
                 command='python3 main.py',
-                stdin=test_sample.input.encode(),
+                stdin=solution.input.encode(),
                 files=files,
                 limits=limits
             )
 
             actual_output = solution_result['stdout'].decode().strip()
-            if actual_output != test_sample.expected:
+            if actual_output != solution.expected:
                 serialized_solution_result = json.dumps({
                     k: v.decode() if isinstance(v, bytes) else v
                     for k, v in solution_result.items()
@@ -97,8 +85,8 @@ class SolutionService:
 
                 error = SolutionError(
                     message=serialized_solution_result,
-                    input=test_sample.input,
-                    expected=test_sample.expected,
+                    input=solution.input,
+                    expected=solution.expected,
                     actual=actual_output,
                 )
 
@@ -116,7 +104,7 @@ class AISolutionService:
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def check(
+    def submit_solution(
         self,
         homework_number: int,
         solution_text: str,
@@ -134,7 +122,7 @@ class AISolutionService:
             raise HTTPException(status.HTTP_404_NOT_FOUND)
 
         response = openai.ChatCompletion.create(
-            model="gpt-4-0314",
+            model="gpt-3.5-turbo-0301",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": f"Ось завдання по програмуванню на Python:\n\n{homework.description}"},
@@ -170,7 +158,7 @@ class AISolutionService:
             raise HTTPException(status.HTTP_404_NOT_FOUND)
 
         response = openai.ChatCompletion.create(
-            model="gpt-4-0314",
+            model="gpt-3.5-turbo-0301",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": f"Ось завдання по програмуванню на Python:\n\n{homework.description}"},

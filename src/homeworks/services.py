@@ -27,25 +27,22 @@ class HomeworksService:
             self.session
             .query(models.Homework)
             .order_by(
-                models.Homework.id.asc()
+                models.Homework.number.asc()
             )
             .all()
         )
         return homeworks
 
-    def get(
-        self,
-        pk: int
-    ) -> models.Homework:
-        operation = self._get(pk)
+    def get(self, number: int) -> models.Homework:
+        operation = self._get(number)
         return operation
 
-    def _get(self, pk: int) -> Optional[models.Homework]:
+    def _get(self, number: int) -> Optional[models.Homework]:
         homework = (
             self.session
             .query(models.Homework)
             .filter(
-                models.Homework.id == pk
+                models.Homework.number == number
             )
             .first()
         )
