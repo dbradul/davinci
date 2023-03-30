@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 
 import homeworks
 import test_samples
+from test_samples import models as test_samples_models
 from davinci.database import get_session
 from davinci.settings import settings
 from solutions import models, schemas
@@ -49,7 +50,7 @@ class SolutionService:
     ) -> schemas.SolutionResponse:
         homework = (
             self.session
-            .query(models.Homework)
+            .query(homeworks.models.Homework)
             .filter(
                 homeworks.models.Homework.number == homework_number
             )
@@ -57,7 +58,8 @@ class SolutionService:
         )
         test_samples_set = (
             self.session
-            .query(test_samples.models.TestSample)
+            # .query(test_samples.models.TestSample)
+            .query(test_samples_models.TestSample)
             .join(homeworks.models.Homework)
             .filter(
                 homeworks.models.Homework.number == homework_number
