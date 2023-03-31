@@ -32,3 +32,18 @@ def get_homework(
     return homeworks_service.get(
         number=number,
     )
+
+
+# @router.put(
+#     '/{number}',
+#     response_model=schemas.Homework,
+# )
+def update_homework(
+    number: int,
+    homework_data: schemas.HomeworkUpdate,
+    homeworks_service: HomeworksService = Depends(),
+):
+    return homeworks_service.update(
+        number=number,
+        homework_data=homework_data
+    )

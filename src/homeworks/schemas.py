@@ -4,7 +4,6 @@ from pydantic import BaseModel
 
 
 class BaseHomework(BaseModel):
-    number: int
     description: str
     is_function: Optional[bool] = False
     code_context: Optional[str]
@@ -13,7 +12,18 @@ class BaseHomework(BaseModel):
 
 
 class Homework(BaseHomework):
-    # id: int
+    number: int
+
+    class Config:
+        orm_mode = True
+
+
+class HomeworkUpdate(BaseHomework):
+
+    class Config:
+        orm_mode = True
+
+class HomeworkCreate(BaseHomework):
 
     class Config:
         orm_mode = True
