@@ -2,6 +2,7 @@ from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 
 from davinci.database import Base
 
@@ -13,3 +14,5 @@ class TestSample(Base):
     homework_id = Column(Integer, ForeignKey('homework.id'), index=True)
     input = Column(String, nullable=False)
     expected = Column(String, nullable=False)
+
+    homework = relationship("Homework", back_populates="test_samples")

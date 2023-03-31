@@ -2,6 +2,7 @@ from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Boolean
+from sqlalchemy.orm import relationship
 
 from davinci.database import Base
 
@@ -16,3 +17,5 @@ class Homework(Base):
     sample_input = Column(String, nullable=True)
     sample_output = Column(String, nullable=True)
     is_function = Column(Boolean, nullable=True, default=False)
+
+    test_samples = relationship("TestSample", back_populates="homework")

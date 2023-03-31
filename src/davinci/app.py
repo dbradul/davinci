@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from homeworks import apis as homeworks_apis
+from test_samples import apis as test_samples_apis
 from solutions import apis as solutions_apis
 
 
@@ -24,4 +25,5 @@ app = FastAPI(
 )
 
 app.include_router(homeworks_apis.router)
+app.include_router(test_samples_apis.router)
 app.include_router(solutions_apis.router)

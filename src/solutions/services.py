@@ -1,7 +1,5 @@
-import json
-from textwrap import dedent
-
 import epicbox
+import json
 import openai
 from fastapi import (
     Depends,
@@ -9,13 +7,12 @@ from fastapi import (
     status,
 )
 from sqlalchemy.orm import Session
+from textwrap import dedent
 
 import homeworks
-import test_samples
-from test_samples import models as test_samples_models
 from davinci.database import get_session
 from davinci.settings import settings
-from solutions import models, schemas
+from solutions import schemas
 from solutions.schemas import SolutionError
 
 openai.api_key = settings.openai_api_key
@@ -25,7 +22,7 @@ class SolutionService:
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def extend_solution_test(self, solution_text: str) -> str:
+    def extend_solution_text(self, solution_text: str) -> str:
         pre_solution_text = dedent("""
             import json
             input_text = input()
@@ -46,7 +43,7 @@ class SolutionService:
     def check(
         self,
         homework_number: int,
-        solution_text: str,
+        solution_text: str
     ) -> schemas.SolutionResponse:
         homework = (
             self.session
@@ -56,24 +53,15 @@ class SolutionService:
             )
             .first()
         )
-        test_samples_set = (
-            self.session
-            # .query(test_samples.models.TestSample)
-            .query(test_samples_models.TestSample)
-            .join(homeworks.models.Homework)
-            .filter(
-                homeworks.models.Homework.number == homework_number
-            )
-            .all()
-        )
 
-        if not test_samples_set:
+        if not homework:
             raise HTTPException(status.HTTP_404_NOT_FOUND)
 
         if homework.is_function:
-            solution_text = self.extend_solution_test(solution_text)
+            solution_text = self.extend_solution_text(solution_text)
 
-        for test_sample in test_samples_set:
+        # for test_sample in test_samples_set:
+        for test_sample in homework.test_samples:
             epicbox.configure(
                 profiles=[
                     epicbox.Profile('python', 'python:3.6.5-alpine')

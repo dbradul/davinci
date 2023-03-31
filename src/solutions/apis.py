@@ -64,7 +64,7 @@ def submit_solution_to_automated_checker(
     homework_number: int,
     solution: Solution = SOLUTION_EXAMPLE,
     solution_service: SolutionService = Depends(),
-):
+) -> SolutionResponse:
     return solution_service.check(
         homework_number,
         solution.content
@@ -79,7 +79,7 @@ def submit_solution_to_ai(
     homework_number: int,
     solution: Solution = SOLUTION_EXAMPLE,
     solution_service: AISolutionService = Depends(),
-):
+) -> str:
     return solution_service.check(
         homework_number,
         solution.content
@@ -93,7 +93,7 @@ def submit_solution_to_ai(
 def get_ai_prompt(
     homework_number: int,
     solution_service: AISolutionService = Depends(),
-):
+) -> str:
     return solution_service.get_prompt(
         homework_number
     )

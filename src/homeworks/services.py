@@ -56,10 +56,3 @@ class HomeworksService:
             setattr(homework, field, value)
         self.session.commit()
         return homework
-
-    def create(self, homework_data: schemas.HomeworkCreate) -> models.Homework:
-        homework = self._get(number)
-        for field, value in homework_data:
-            setattr(homework, field, value)
-        self.session.commit()
-        return homework
