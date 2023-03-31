@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 import homeworks
 from davinci.database import get_session
 from test_samples import schemas
+from test_samples import models # noqa: F401, this import is required for relationship field to work
 
 
 class TestSampleService:
